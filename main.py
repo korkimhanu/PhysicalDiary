@@ -14,4 +14,6 @@ def print_hi(name):
 if __name__ == '__main__':
     print_hi('PyChardddm')
 
+    print("Hello World!") # Git push test by Sleepy Cho
+
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
