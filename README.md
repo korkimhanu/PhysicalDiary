@@ -10,11 +10,24 @@
 >git commit -m "수정한 버전 이름" ::개인 깃 리포지터리에 커밋
 >git push origin master ::깃헙에 업로드
 >```
+>UI 수정방법
+> >1. ![pycharm 프로젝트 파일 접속](/Images/UIprocess1.png)
+> >
+> >2. [여기](/venv/Scripts)로 이동
+> >3. pySide6-designer.exe 실행
+> >4. ![UI 열기](/Images/UIprocess2.png)
+> >5. ![UI 열기2](/Images/UIprocess3.png)
+> >6. 수정 후 ctr+s (UI만 수정했을 때도 File이 바뀐 것이므로 git add .부터 git push까지 해줘야함)
+> >7. ctr+s만 하면 수정이 파이썬 코드에서는 수정이 안됨. 따라서 파이썬 코드 수정 필요
+> >8. ![UI 저장](/Images/UIprocess4.png)
+> >9. ![UI 저장](/Images/UIprocess5.png)
+> >10. ![UI 저장](/Images/UIprocess6.png)
+> 
 >
 >### 나. 코드 위치
 > + [main code](main.py)
 > + [UIs](UI)
->   + [MainScreen(Loby)](UI/ui_mainScreen.py)
+>   + [MainScreen(Loby)](UI/ui_Loby.py)
 > + [UI editor](venv/Scripts/pyside6-designer.exe) (UI를 코딩이 아닌 UI가 있는 에디터로 편집하고 싶을 떄 사용)
 > 
 >### 다. pyside6 & PyQt5 & git 관련 강의 모음

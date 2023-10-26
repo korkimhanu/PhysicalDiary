@@ -1,6 +1,6 @@
 import sys
 from PySide6.QtWidgets import QApplication, QWidget, QMainWindow
-from UI.ui_mainScreen import Ui_MainWindow #로비 UI를 UI 디렉토리에서 import
+from UI.ui_Loby import Ui_MainWindow #로비 UI를 UI 디렉토리에서 import
 
 class Loby_Window(QMainWindow, Ui_MainWindow):  #로비 화면 클래스 생성
     def __init__(self): #class 기본 인자 설정
