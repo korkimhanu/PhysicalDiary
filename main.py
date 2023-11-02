@@ -13,4 +13,6 @@ window = Loby_Window() #Loby_window 클래스 변수 생성
 window.setFixedSize(1080,720) #창 크기 1080*720으로 설정
 window.show() #창 띄우기
 
+#test
+
 app.exec() #앱 실행
