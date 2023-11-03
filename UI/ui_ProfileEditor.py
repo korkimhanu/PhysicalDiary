@@ -4,16 +4,23 @@ from PySide6.QtWidgets import (
     QHBoxLayout, QMessageBox, QFileDialog
 )
 from PySide6.QtGui import QPixmap
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QApplication, QLabel, QLineEdit, QPushButton,
+    QSizePolicy, QWidget)
+
 
 
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-
-        self.setWindowTitle("프로필 수정")
-        self.setGeometry(100, 100, 300, 200)
-
+        Form.resize(806, 600)
         # 프로필 사진
         self.profile_pic_label = QLabel("프로필 사진")
         self.profile_pic = QLabel()
@@ -72,3 +79,7 @@ class Ui_Form(object):
 # profile_dialog = ProfileDialog()
 # profile_dialog.show()
 # sys.exit(app.exec())
+
+
+
+#layout구조에 대해서 공부하고 화면 아무것도 안보이는 문제 해결할 필요있음

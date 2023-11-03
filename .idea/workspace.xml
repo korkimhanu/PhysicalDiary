@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8313fb8a-b3fd-4c9a-bab3-854eabb3cb82" name="변경" comment="변경">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/ui_Loby.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/ui_Loby.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/ui_ProfileEditor.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/ui_ProfileEditor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
