@@ -20,7 +20,7 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(806, 600)
+        Form.resize(1072, 720)
         # 프로필 사진
         self.profile_pic_label = QLabel("프로필 사진")
         self.profile_pic = QLabel()
@@ -43,21 +43,21 @@ class Ui_Form(object):
         self.save_button.clicked.connect(self.save_profile)
 
         # 레이아웃 구성
-        layout = QVBoxLayout()
-
-        pic_layout = QHBoxLayout()
-        pic_layout.addWidget(self.profile_pic)
-        pic_layout.addWidget(self.profile_pic_button)
-
-        layout.addWidget(self.profile_pic_label)
-        layout.addLayout(pic_layout)
-        layout.addWidget(self.id_label)
-        layout.addWidget(self.id_edit)
-        layout.addWidget(self.password_label)
-        layout.addWidget(self.password_edit)
-        layout.addWidget(self.save_button)
-
-        self.setLayout(layout)
+        # layout = QVBoxLayout()
+        #
+        # pic_layout = QHBoxLayout()
+        # pic_layout.addWidget(self.profile_pic)
+        # pic_layout.addWidget(self.profile_pic_button)
+        #
+        # layout.addWidget(self.profile_pic_label)
+        # layout.addLayout(pic_layout)
+        # layout.addWidget(self.id_label)
+        # layout.addWidget(self.id_edit)
+        # layout.addWidget(self.password_label)
+        # layout.addWidget(self.password_edit)
+        # layout.addWidget(self.save_button)
+        #
+        # self.setLayout(layout)
 
     def change_profile_pic(self):
         # 파일 다이얼로그를 열어 이미지 파일을 선택합니다.
