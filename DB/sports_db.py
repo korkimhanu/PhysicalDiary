@@ -1,5 +1,5 @@
 class SportsDB:
-    sport_calories = {
+    sports_calories = {
         "걷기": 150,
         "조깅": 300,
         "수영": 250,

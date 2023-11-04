@@ -2,7 +2,7 @@
 
 # 운동과 소모 칼로리 정보를 포함한 딕셔너리 생성
 from DB.food_db import FoodDB
-from DB.sport_db import SportDB
+from DB.sports_db import SportsDB
 
 total_calories = 0
 
@@ -21,7 +21,7 @@ while True:
             diary_entry = diary_entry.replace(food, f"{food}({calories}kcal)", diary_entry.count(food))
 
     # 운동과 소모 칼로리 정보 찾기
-    for exercise, calories_burned in SportDB.sport_calories.items():
+    for exercise, calories_burned in SportsDB.sports_calories.items():
         if exercise in diary_entry:
             entry_calories -= calories_burned * diary_entry.count(exercise)
             diary_entry = diary_entry.replace(exercise, f"{exercise}(-{calories_burned}kcal)",
