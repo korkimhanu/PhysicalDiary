@@ -6,14 +6,14 @@
 """
 import sys
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QTextEdit, QLineEdit, QListWidget
+from PySide6.QtWidgets import QApplication, QMainWindow, QDialog, QVBoxLayout, QLabel, QPushButton, QTextEdit, QLineEdit, QListWidget, QWidget
 import os
 from datetime import datetime
 
 class DiaryManager:
     def __init__(self):
         self.diary_list = []
-        self.data_file = os.path.join(os.path.dirname(__file__), 'diary_data.txt')
+        self.data_file = os.path.join(os.path.dirname(__file__), '..', 'DB', 'diary_data.txt')
 
     def load_diary_from_file(self):
         try:
@@ -53,42 +53,41 @@ class DiaryManager:
         ))
         self.save_diary_to_file()
 
-    def append_to_diary(self, _id, _content):
-        for diary in self.diary_list:
-            if diary["diary_id"] == _id:
-                diary["diary_content"] += "\n" + _content
-                self.save_diary_to_file()
-                return True
-        return False
+class DiaryCreateDialog(QDialog):
+    def __init__(self, diary_manager):
+        super().__init__()
+        self.diary_manager = diary_manager
+        self.setWindowTitle("일기 작성하기")
+        self.setGeometry(100, 100, 400, 300)
+        self.layout = QVBoxLayout()
+        self.init_ui()
 
-    def read_diary(self, _id):
-        for diary in self.diary_list:
-            if diary["diary_id"] == _id:
-                return diary
-        return None
+    def init_ui(self):
+        self.create_diary_title_input = QLineEdit("일기 제목을 입력하세요")
+        self.create_diary_weather_input = QLineEdit("날씨를 입력하세요")
+        self.create_diary_content_input = QTextEdit("일기 내용을 입력하세요")
+        self.create_diary_button = QPushButton("일기 작성 완료")
+        self.create_diary_button.clicked.connect(self.create_diary)
+        self.layout.addWidget(self.create_diary_title_input)
+        self.layout.addWidget(self.create_diary_weather_input)
+        self.layout.addWidget(self.create_diary_content_input)
+        self.layout.addWidget(self.create_diary_button)
+        self.setLayout(self.layout)
 
-    def update_diary(self, _id, _content):
-        for diary in self.diary_list:
-            if diary["diary_id"] == _id:
-                diary["diary_content"] = _content
-                self.save_diary_to_file()
-                return True
-        return False
+    def create_diary(self):
+        title = self.create_diary_title_input.text()
+        weather = self.create_diary_weather_input.text()
+        content = self.create_diary_content_input.toPlainText()
+        self.diary_manager.create_diary(title, weather, content)
+        self.accept()  # Close the dialog after creating the diary
 
-    def delete_diary(self, _id):
-        for diary in self.diary_list:
-            if diary["diary_id"] == _id:
-                self.diary_list.remove(diary)
-                self.save_diary_to_file()
-                return True
-        return False
-
-class DiaryApp(QWidget):
+class DiaryApp(QMainWindow):
     def __init__(self):
-        super().__init()
+        super().__init__()
         self.diary_manager = DiaryManager()
         self.setWindowTitle("일기 프로그램")
         self.setGeometry(100, 100, 800, 600)
+        self.central_widget = QWidget()
         self.layout = QVBoxLayout()
         self.init_ui()
 
@@ -105,45 +104,22 @@ class DiaryApp(QWidget):
 
         self.menu_list.itemClicked.connect(self.handle_menu_selection)
 
-        self.setLayout(self.layout)
+        self.central_widget.setLayout(self.layout)
+        self.setCentralWidget(self.central_widget)
 
     def handle_menu_selection(self, item):
         selected_text = item.text()
         if selected_text == "일기 작성하기":
-            self.show_create_diary_form()
+            self.show_create_diary_dialog()
         elif selected_text == "일기 목록 보기":
             self.show_diary_list()
         elif selected_text == "프로그램 종료":
             self.close()
 
-    def show_create_diary_form(self):
-        self.result_label.setText("일기 작성하기")
-        self.create_diary_title_input = QLineEdit("일기 제목을 입력하세요")
-        self.create_diary_weather_input = QLineEdit("날씨를 입력하세요")
-        self.create_diary_content_input = QTextEdit("일기 내용을 입력하세요")
-        self.create_diary_button = QPushButton("일기 작성 완료")
-        self.create_diary_button.clicked.connect(self.create_diary)
-        self.layout.addWidget(self.create_diary_title_input)
-        self.layout.addWidget(self.create_diary_weather_input)
-        self.layout.addWidget(self.create_diary_content_input)
-        self.layout.addWidget(self.create_diary_button)
-
-    def create_diary(self):
-        title = self.create_diary_title_input.text()
-        weather = self.create_diary_weather_input.text()
-        content = self.create_diary_content_input.toPlainText()
-        self.diary_manager.create_diary(title, weather, content)
-        self.result_label.setText("일기가 작성되었습니다.")
-
-        # 일기 작성이 완료되면 입력 창을 제거
-        self.layout.removeWidget(self.create_diary_title_input)
-        self.layout.removeWidget(self.create_diary_weather_input)
-        self.layout.removeWidget(self.create_diary_content_input)
-        self.layout.removeWidget(self.create_diary_button)
-        self.create_diary_title_input.deleteLater()
-        self.create_diary_weather_input.deleteLater()
-        self.create_diary_content_input.deleteLater()
-        self.create_diary_button.deleteLater()
+    def show_create_diary_dialog(self):
+        create_dialog = DiaryCreateDialog(self.diary_manager)
+        create_dialog.exec_()  # Show the dialog and wait for it to be closed
+        # After the dialog is closed, you can update the UI as needed
 
     def show_diary_list(self):
         self.result_label.setText("일기 목록")
