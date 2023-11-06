@@ -5,9 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8313fb8a-b3fd-4c9a-bab3-854eabb3cb82" name="변경" comment="변경">
-      <change afterPath="$PROJECT_DIR$/diaryFunctions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DB/diary.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DB/food_db.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DB/sports_db.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Program/calories_calculate.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Program/diary.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/ui_ProfileEditor.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/ui_ProfileEditor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DB/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/DB/db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +44,8 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Merging master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/k-j-m/Downloads/Gopherus-master&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.language&quot;
   }
 }</component>

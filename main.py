@@ -10,7 +10,7 @@ class Loby_Window(QMainWindow, Loby.Ui_MainWindow):  #로비 화면 클래스 �
     def __init__(self): #class 기본 인자 설정
         super(Loby_Window,self).__init__()
         self.setupUi(self)
-        self.profileEditBtn.clicked.connect(self.switch_to_PE) #연결 필요함
+        self.profileEditBtn.clicked.connect(self.switch_to_PE)
 
     def switch_to_PE(self):
         # 로비 윈도우 인스턴스를 생성하고 보여줍니다.
