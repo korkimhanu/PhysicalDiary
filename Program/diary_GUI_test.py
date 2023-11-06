@@ -1,3 +1,9 @@
+"""
+ * Date: 2023년 11월 6일
+ * Author: 조성진
+ * Description: 일기장 GUI 테스트
+ * Version: 1.1.0
+"""
 import sys
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QTextEdit, QLineEdit, QListWidget
@@ -7,7 +13,7 @@ from datetime import datetime
 class DiaryManager:
     def __init__(self):
         self.diary_list = []
-        self.data_file = os.path.join(os.path.dirname(__file__), '..', 'DB', 'diary_data.txt')
+        self.data_file = os.path.join(os.path.dirname(__file__), 'diary_data.txt')
 
     def load_diary_from_file(self):
         try:
@@ -79,7 +85,7 @@ class DiaryManager:
 
 class DiaryApp(QWidget):
     def __init__(self):
-        super().__init__()
+        super().__init()
         self.diary_manager = DiaryManager()
         self.setWindowTitle("일기 프로그램")
         self.setGeometry(100, 100, 800, 600)
@@ -128,6 +134,16 @@ class DiaryApp(QWidget):
         content = self.create_diary_content_input.toPlainText()
         self.diary_manager.create_diary(title, weather, content)
         self.result_label.setText("일기가 작성되었습니다.")
+
+        # 일기 작성이 완료되면 입력 창을 제거
+        self.layout.removeWidget(self.create_diary_title_input)
+        self.layout.removeWidget(self.create_diary_weather_input)
+        self.layout.removeWidget(self.create_diary_content_input)
+        self.layout.removeWidget(self.create_diary_button)
+        self.create_diary_title_input.deleteLater()
+        self.create_diary_weather_input.deleteLater()
+        self.create_diary_content_input.deleteLater()
+        self.create_diary_button.deleteLater()
 
     def show_diary_list(self):
         self.result_label.setText("일기 목록")
