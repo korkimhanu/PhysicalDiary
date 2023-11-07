@@ -41,16 +41,16 @@ class Login_Window(QMainWindow, Login.Ui_Form):
         self.loby_window.show()
         self.close()
 
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
 
-app = QApplication(sys.argv)
-
-Lobywindow = Loby_Window() #Loby_window 클래스 변수 생성
-Lobywindow.setFixedSize(1080,720) #창 크기 1080*720으로 설정
-Diarywindow = Diary_Window()
-Diarywindow.setFixedSize(1080,720)
-Loginwindow = Login_Window()
-Loginwindow.show() #창 띄우기
+    Lobywindow = Loby_Window() #Loby_window 클래스 변수 생성
+    Lobywindow.setFixedSize(1080,720) #창 크기 1080*720으로 설정
+    Diarywindow = Diary_Window()
+    Diarywindow.setFixedSize(1080,720)
+    Loginwindow = Login_Window()
+    Lobywindow.show() #창 띄우기
 
 
 
-app.exec() #앱 실행
+    app.exec() #앱 실행
