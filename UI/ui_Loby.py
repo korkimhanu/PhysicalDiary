@@ -52,8 +52,10 @@ class Ui_MainWindow(object):
 
         self.diary_listTable = QTableWidget(self.centralwidget)
         self.diary_listTable.setObjectName(u"diary_listTable")
-        self.diary_listTable.setColumnCount(4)
-        self.diary_listTable.setHorizontalHeaderLabels(["제목", "날짜", "칼로리","날씨"])
+        self.diary_listTable.setColumnCount(3)
+        self.diary_listTable.setHorizontalHeaderLabels(["제목", "날짜","날씨"])
+        weather_column_index = 2  # Index starts at 0, so if "날씨" is the third column, it will be index 2.
+        self.diary_listTable.setColumnWidth(weather_column_index, 280)
         self.diary_listTable.cellClicked.connect(self.show_diary)
         self.diary_listTable.setGeometry(QRect(390, 0, 500, 681))
 
@@ -193,14 +195,14 @@ class Ui_MainWindow(object):
             item_date.setFlags(item_date.flags() ^ Qt.ItemIsEditable)
             item_weather = QTableWidgetItem(diary["diary_weather"])
             item_weather.setFlags(item_weather.flags() ^ Qt.ItemIsEditable)
-            item_calories = QTableWidgetItem(fcc.calculate_calories(diary["diary_content"]))
-            item_calories.setFlags(item_calories.flags() ^ Qt.ItemIsEditable) #로비에서 칼로리 표시기능(현재 안됨, 구현 요구됨)
+            # item_calories = QTableWidgetItem(fcc.calculate_calories(diary["diary_content"]))
+            # item_calories.setFlags(item_calories.flags() ^ Qt.ItemIsEditable) #로비에서 칼로리 표시기능(현재 안됨, 구현 요구됨)
 
 
             self.diary_listTable.setItem(i, 0, item_title)
             self.diary_listTable.setItem(i, 1, item_date)
-            self.diary_listTable.setItem(i,2,item_calories)
-            self.diary_listTable.setItem(i, 3, item_weather)
+            # self.diary_listTable.setItem(i,2,item_calories)
+            self.diary_listTable.setItem(i, 2, item_weather)
 
             self.diary_listTable.setSelectionBehavior(QTableWidget.SelectRows)
 
@@ -221,11 +223,8 @@ class Ui_MainWindow(object):
         layout.addWidget(title_label)
         layout.addWidget(title_input)
 
-        weather_label = QLabel("날씨:")
-        weather_input = QLineEdit()
-        weather_input.setPlaceholderText("날씨를 입력해주세요")  # 디폴트 메시지 설정
+        weather_label = QLabel("날씨:"+"\n"+crawling.scrapeWeatherFromNaver())
         layout.addWidget(weather_label)
-        layout.addWidget(weather_input)
 
         content_label = QLabel("내용:")
         content_input = QTextEdit()
@@ -241,7 +240,7 @@ class Ui_MainWindow(object):
 
         if dialog.exec() == QDialog.Accepted:
             title = title_input.text()
-            weather = weather_input.text()
+            weather = crawling.scrapeWeatherFromNaver()
             content = content_input.toPlainText()
 
             if title and weather and content:
@@ -316,7 +315,7 @@ class Ui_MainWindow(object):
         with open(self.data_file, 'w') as file:
             for diary in self.diary_list:
                 file.write(
-                    f'{diary["diary_id"]}|{diary["diary_title"]}|{diary["diary_weather"]}|{diary["diary_date"]}|{diary["diary_content"]}\n')
+                    f'{diary[u"diary_id"]}|{diary[u"diary_title"]}|{diary[u"diary_weather"]}|{diary[u"diary_date"]}|{diary[u"diary_content"]}\n')
 
 
 

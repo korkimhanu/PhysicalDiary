@@ -63,7 +63,22 @@ def scrape_weather_forPrint_fromNaver():
 
     print(cast)
     print(curr_temp)
-
+def scrapeWeatherFromNaver():
+    """
+    날씨를 네이버에서 스크랩하여 리턴합니다
+    :return:
+    """
+    url = "https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&query=%EC%98%A4%EB%8A%98%EC%9D%98+%EB%82%A0%EC%94%A8&oquery=loby&tqi=iRBC8wqo1SossDgN9WhssssstRK-079882"
+    res = requests.get(url)
+    res.raise_for_status()
+    soup = BeautifulSoup(res.text, "lxml")
+    # 날씨, 어제보다 n도 높(낮)아요
+    cast = soup.find("p", attrs={"class": "summary"}).get_text()
+    # 현재 온도/최저/최고
+    curr_temp = soup.find("div", attrs={"class": "temperature_text"}).get_text().replace("도씨", "") + "/" + soup.find(
+        "span", attrs={"class": "lowest"}).get_text() + "/" + soup.find("span", attrs={"class": "highest"}).get_text()
+    weather = cast +"\n" + curr_temp
+    return weather
 #scrape_weather_forPrint_fromNaver()
 
 
