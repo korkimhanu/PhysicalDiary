@@ -5,6 +5,7 @@ from PySide6.QtGui import QPixmap
 from PIL import Image
 from PySide6 import QtCore
 import json
+import uuid
 
 class ProfileApp(QMainWindow):
     def __init__(self):
@@ -77,20 +78,21 @@ class ProfileApp(QMainWindow):
 
         self.person.set_info(name, selected_gender, age)
 
-        # 프로필 이미지 파일 경로 추적
+        # 고유한 이미지 파일 이름 생성 (UUID를 사용하거나 현재 시간을 기반으로 생성)
+        unique_filename = str(uuid.uuid4()) + ".png"
+        image_path = os.path.join("../PhysicalDiary/DB/profile_image", unique_filename)
+
+        # 이미지 파일 저장
         pixmap = self.profile_label.pixmap()
         if pixmap is not None:
-            image_path = os.path.join("../DB/profile_image", "profile_image.png")  # 파일 이름을 원하는 이름으로 변경
-            pixmap.toImage().save(image_path)  # 이미지 저장
-        else:
-            image_path = ""
+            pixmap.toImage().save(image_path)
 
-        # Person 객체의 정보와 이미지 파일 경로를 JSON 파일에 저장
+        # Person 객체의 정보와 고유한 이미지 파일 이름을 JSON 파일에 저장
         profile_data = {
             "person": self.person.to_dict(),
-            "image_path": image_path
+            "image_path": image_path  # 고유한 이미지 파일 이름 저장
         }
-        with open("../DB/profile_data.json", "w") as file:
+        with open("../PhysicalDiary/DB/profile_data.json", "w") as file:
             json.dump(profile_data, file)
 
         # 저장이 완료되었다는 메시지 박스 표시
@@ -98,13 +100,13 @@ class ProfileApp(QMainWindow):
 
     def load_profile_data(self):
         try:
-            with open("../DB/profile_data.json", "r") as file:
+            with open("../PhysicalDiary/DB/profile_data.json", "r") as file:
                 data = json.load(file)
                 person_data = data.get("person", {})
                 image_path = data.get("image_path", "")
                 self.person.from_dict(person_data)
 
-                # 프로필 이미지를 QLabel에 표시
+                # 이미지 파일을 QLabel에 표시
                 if image_path and os.path.exists(image_path):
                     pixmap = QPixmap(image_path)
                     self.profile_label.setPixmap(pixmap)
@@ -112,7 +114,7 @@ class ProfileApp(QMainWindow):
 
                 self.update_ui()
         except FileNotFoundError:
-            # Handle the case where the file doesn't exist
+            # 파일이 없는 경우 처리
             pass
 
     def update_ui(self):
@@ -131,12 +133,15 @@ class ProfileApp(QMainWindow):
 
         if file_path:
             # 이미지를 DB/profile_image 디렉토리에 복사
-            destination_dir = "../DB/profile_image"
+            destination_dir = "../PhysicalDiary/DB/profile_image"
             if not os.path.exists(destination_dir):
                 os.makedirs(destination_dir)
 
-            destination_path = os.path.join(destination_dir, "profile_image.png")  # 파일 이름을 원하는 이름으로 변경
+            # 고유한 이미지 파일 이름 생성 (UUID를 사용하거나 현재 시간을 기반으로 생성)
+            unique_filename = str(uuid.uuid4()) + ".png"
+            destination_path = os.path.join(destination_dir, unique_filename)
 
+            # 이미지 파일 복사
             if os.path.exists(destination_path):
                 os.remove(destination_path)  # 기존 이미지 삭제
 
@@ -177,3 +182,9 @@ class Person:
         self.name = data.get("name", "")
         self.gender = data.get("gender", "")
         self.age = data.get("age", 0)
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = ProfileApp()
+    window.show()
+    sys.exit(app.exec())
