@@ -81,25 +81,25 @@ class Ui_MainWindow(object):
         self.btnLayouts.setObjectName(u"btnLayouts")
         self.btnLayouts.setContentsMargins(0, 0, 0, 0)
 
-        self.writeDiaryBtn = QPushButton(self.verticalLayoutWidget,"일기 작성하기")
+        self.writeDiaryBtn = QPushButton("일기 작성하기",self.verticalLayoutWidget)
         self.writeDiaryBtn.clicked.connect(self.create_diary)
         self.writeDiaryBtn.setObjectName(u"writeDiaryBtn")
 
         self.btnLayouts.addWidget(self.writeDiaryBtn)
 
-        self.EditDiaryBtn = QPushButton(self.verticalLayoutWidget,u"일기 수정하기")
+        self.EditDiaryBtn = QPushButton(u"일기 수정하기",self.verticalLayoutWidget)
         self.EditDiaryBtn.clicked.connect(self.modify_diary)
         self.EditDiaryBtn.setObjectName(u"EditDiaryBtn")
 
         self.btnLayouts.addWidget(self.EditDiaryBtn)
 
-        self.deleteDiaryBtn = QPushButton(self.verticalLayoutWidget,u"일기 삭제하기")
+        self.deleteDiaryBtn = QPushButton(u"일기 삭제하기",self.verticalLayoutWidget)
         self.deleteDiaryBtn.clicked.connect(self.delete_diary)
         self.deleteDiaryBtn.setObjectName(u"deleteDiaryBtn")
 
         self.btnLayouts.addWidget(self.deleteDiaryBtn)
 
-        self.loadDiaryBtn = QPushButton(self.verticalLayoutWidget, u"일기 불러오기")
+        self.loadDiaryBtn = QPushButton( u"일기 불러오기", self.verticalLayoutWidget)
         self.loadDiaryBtn.clicked.connect(self.load_diary)
         self.loadDiaryBtn.setObjectName(u"loadDiaryBtn")
 
