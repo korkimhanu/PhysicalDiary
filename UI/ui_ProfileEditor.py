@@ -98,7 +98,7 @@ class ProfileApp(QMainWindow):
 
     def load_profile_data(self):
         try:
-            with open("../PhysicalDiary/profile_data.json", "r") as file:
+            with open("../DB/profile_data.json", "r") as file:
                 data = json.load(file)
                 person_data = data.get("person", {})
                 image_path = data.get("image_path", "")
@@ -131,7 +131,7 @@ class ProfileApp(QMainWindow):
 
         if file_path:
             # 이미지를 DB/profile_image 디렉토리에 복사
-            destination_dir = "../PhysicalDiary/DB/profile_image"
+            destination_dir = "../DB/profile_image"
             if not os.path.exists(destination_dir):
                 os.makedirs(destination_dir)
 
