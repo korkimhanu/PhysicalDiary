@@ -53,4 +53,6 @@ if __name__ == "__main__":
 
 
 
+
     app.exec() #앱 실행
+
