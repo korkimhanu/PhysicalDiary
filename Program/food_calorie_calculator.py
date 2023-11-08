@@ -1,3 +1,10 @@
+"""
+ * Date: 2023년 11월 8일
+ * Author: 김성모, 이현우
+ * Minor Author : 조성진
+ * Description: 칼로리 계산 기능 연동
+ * Version: 1.0
+"""
 from DB.food_db import FoodDB
 from DB.sports_db import SportsDB
 

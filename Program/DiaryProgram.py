@@ -1,3 +1,9 @@
+"""
+ * Date: 2023년 11월 8일
+ * Author: 박병규, 이대규, 조성진
+ * Description: 일기장
+ * Version: 3.0
+"""
 import os
 import sys
 from datetime import datetime
