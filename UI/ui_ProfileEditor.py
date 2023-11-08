@@ -80,7 +80,7 @@ class ProfileApp(QMainWindow):
         # 프로필 이미지 파일 경로 추적
         pixmap = self.profile_label.pixmap()
         if pixmap is not None:
-            image_path = os.path.join("../PhysicalDiary/DB/profile_image", "profile_image.png")  # 파일 이름을 원하는 이름으로 변경
+            image_path = os.path.join("../DB/profile_image", "profile_image.png")  # 파일 이름을 원하는 이름으로 변경
             pixmap.toImage().save(image_path)  # 이미지 저장
         else:
             image_path = ""
@@ -90,7 +90,7 @@ class ProfileApp(QMainWindow):
             "person": self.person.to_dict(),
             "image_path": image_path
         }
-        with open("../PhysicalDiary/DB/profile_data.json", "w") as file:
+        with open("../DB/profile_data.json", "w") as file:
             json.dump(profile_data, file)
 
         # 저장이 완료되었다는 메시지 박스 표시
@@ -177,9 +177,3 @@ class Person:
         self.name = data.get("name", "")
         self.gender = data.get("gender", "")
         self.age = data.get("age", 0)
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = ProfileApp()
-    window.show()
-    sys.exit(app.exec())
