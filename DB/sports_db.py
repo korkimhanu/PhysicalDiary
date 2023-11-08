@@ -1,3 +1,9 @@
+"""
+ * Date: 2023년 11월 8일
+ * Author: 김성모, 이현우
+ * Description: 운동 DB
+ * Version: 1.0
+"""
 class SportsDB:
     sports_calories = {
         "걷기": 150,

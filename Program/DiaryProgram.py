@@ -1,9 +1,15 @@
+"""
+ * Date: 2023년 11월 8일
+ * Author: 박병규, 이대규, 조성진
+ * Description: 일기장
+ * Version: 3.0
+"""
 import os
 import sys
 from datetime import datetime
 from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidget, QTableWidgetItem, QWidget, QTextEdit, QInputDialog, QDialog, QLabel, QLineEdit
 from PySide6.QtCore import Qt
-from food_calorie_calculator import calculate_calories
+from subFunctions.food_calorie_calculator import calculate_calories
 
 class DiaryApp(QMainWindow):
     def __init__(self):
@@ -27,8 +33,8 @@ class DiaryApp(QMainWindow):
 
         # 왼쪽에 일기 목록을 추가
         self.table_widget = QTableWidget()
-        self.table_widget.setColumnCount(2)
-        self.table_widget.setHorizontalHeaderLabels(["제목", "날짜"])
+        self.table_widget.setColumnCount(3)
+        self.table_widget.setHorizontalHeaderLabels(["제목", "날짜", "칼로리"])
         self.table_widget.cellClicked.connect(self.show_diary)
         horizontal_layout.addWidget(self.table_widget)
 
@@ -50,9 +56,9 @@ class DiaryApp(QMainWindow):
         self.load_diary_button.clicked.connect(self.load_diary)
         button_layout.addWidget(self.load_diary_button)
 
-        self.calculate_calories_button = QPushButton("칼로리 계산하기")
-        self.calculate_calories_button.clicked.connect(self.calculate_calories)
-        button_layout.addWidget(self.calculate_calories_button)
+        # self.calculate_calories_button = QPushButton("칼로리 계산하기")
+        # self.calculate_calories_button.clicked.connect(self.calculate_calories)
+        # button_layout.addWidget(self.calculate_calories_button)
 
         horizontal_layout.addLayout(button_layout)
         self.central_widget.setLayout(horizontal_layout)

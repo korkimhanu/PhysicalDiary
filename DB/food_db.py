@@ -1,3 +1,9 @@
+"""
+ * Date: 2023년 11월 8일
+ * Author: 김성모, 이현우
+ * Description: 음식 DB
+ * Version: 1.0
+"""
 class FoodDB:
     food_calories = {
         "사과": 95,

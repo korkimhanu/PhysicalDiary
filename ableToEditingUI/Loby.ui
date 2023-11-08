@@ -73,7 +73,7 @@
      <rect>
       <x>390</x>
       <y>0</y>
-      <width>681</width>
+      <width>421</width>
       <height>681</height>
      </rect>
     </property>
@@ -146,6 +146,46 @@
     <property name="text">
      <string/>
     </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>-1</y>
+      <width>160</width>
+      <height>681</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="btnLayouts">
+     <item>
+      <widget class="QPushButton" name="writeDiaryBtn">
+       <property name="text">
+        <string>일기 쓰기</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="EditDiaryBtn">
+       <property name="text">
+        <string>PushButton</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="deleteDiaryBtn">
+       <property name="text">
+        <string>PushButton</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="loadDiaryBtn">
+       <property name="text">
+        <string>PushButton</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

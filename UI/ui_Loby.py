@@ -17,7 +17,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCalendarWidget, QHeaderView, QLabel,
     QMainWindow, QMenuBar, QPushButton, QSizePolicy,
-    QStatusBar, QTableView, QWidget)
+    QStatusBar, QTableView, QWidget,QTableWidget,QTextEdit,
+    QTableWidgetItem,QVBoxLayout,QInputDialog,QDialog,QLineEdit)
+import os
+from datetime import datetime
+from subFunctions import food_calorie_calculator as fcc, crawling
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -46,9 +50,60 @@ class Ui_MainWindow(object):
         self.Diary.setGeometry(QRect(90, 40, 241, 61))
         self.Diary.setFont(font)
 
-        self.diary_listTable = QTableView(self.centralwidget)
+        self.diary_listTable = QTableWidget(self.centralwidget)
         self.diary_listTable.setObjectName(u"diary_listTable")
-        self.diary_listTable.setGeometry(QRect(390, 0, 681, 681))
+        self.diary_listTable.setColumnCount(4)
+        self.diary_listTable.setHorizontalHeaderLabels(["제목", "날짜", "칼로리","날씨"])
+        self.diary_listTable.cellClicked.connect(self.show_diary)
+        self.diary_listTable.setGeometry(QRect(390, 0, 500, 681))
+
+        # button_layout = QVBoxLayout()
+        # self.create_button = QPushButton("일기 작성하기")
+        # self.create_button.clicked.connect(self.create_diary)
+        # button_layout.addWidget(self.create_button)
+        #
+        # self.modify_button = QPushButton("일기 수정하기")
+        # self.modify_button.clicked.connect(self.modify_diary)
+        # button_layout.addWidget(self.modify_button)
+        #
+        # self.delete_button = QPushButton("일기 삭제하기")
+        # self.delete_button.clicked.connect(self.delete_diary)
+        # button_layout.addWidget(self.delete_button)
+        #
+        # self.load_diary_button = QPushButton("일기 불러오기")
+        # self.load_diary_button.clicked.connect(self.load_diary)
+        # button_layout.addWidget(self.load_diary_button)
+
+        self.verticalLayoutWidget = QWidget(self.centralwidget)
+        self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
+        self.verticalLayoutWidget.setGeometry(QRect(910, -1, 160, 681))
+        self.btnLayouts = QVBoxLayout(self.verticalLayoutWidget)
+        self.btnLayouts.setObjectName(u"btnLayouts")
+        self.btnLayouts.setContentsMargins(0, 0, 0, 0)
+
+        self.writeDiaryBtn = QPushButton(self.verticalLayoutWidget,"일기 작성하기")
+        self.writeDiaryBtn.clicked.connect(self.create_diary)
+        self.writeDiaryBtn.setObjectName(u"writeDiaryBtn")
+
+        self.btnLayouts.addWidget(self.writeDiaryBtn)
+
+        self.EditDiaryBtn = QPushButton(self.verticalLayoutWidget,u"일기 수정하기")
+        self.EditDiaryBtn.clicked.connect(self.modify_diary)
+        self.EditDiaryBtn.setObjectName(u"EditDiaryBtn")
+
+        self.btnLayouts.addWidget(self.EditDiaryBtn)
+
+        self.deleteDiaryBtn = QPushButton(self.verticalLayoutWidget,u"일기 삭제하기")
+        self.deleteDiaryBtn.clicked.connect(self.delete_diary)
+        self.deleteDiaryBtn.setObjectName(u"deleteDiaryBtn")
+
+        self.btnLayouts.addWidget(self.deleteDiaryBtn)
+
+        self.loadDiaryBtn = QPushButton(self.verticalLayoutWidget, u"일기 불러오기")
+        self.loadDiaryBtn.clicked.connect(self.load_diary)
+        self.loadDiaryBtn.setObjectName(u"loadDiaryBtn")
+
+        self.btnLayouts.addWidget(self.loadDiaryBtn)
 
         self.user_name = QLabel(self.centralwidget)
         self.user_name.setObjectName(u"user_name")
@@ -86,6 +141,16 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
+        data_dir = os.path.join(os.path.dirname(__file__), '..', 'DB')
+        self.data_file = os.path.join(data_dir, 'diary_data.txt')
+
+        self.diary_list = []
+        self.load_diary_from_file()
+        self.current_diary_id = None
+        self.diary_text = QTextEdit()
+
+        self.show_diary_list()
+
         self.retranslateUi(MainWindow)
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -100,4 +165,158 @@ class Ui_MainWindow(object):
         self.profileEditBtn.setText(QCoreApplication.translate("MainWindow", u"\ud504\ub85c\ud544 \uc218\uc815\ud558\uae30", None))
         self.profilePortrait.setText("")
     # retranslateUi
+
+    def load_diary_from_file(self):
+        try:
+            with open(self.data_file, 'r') as file:
+                for line in file:
+                    parts = line.strip().split('|')
+                    if len(parts) == 5:
+                        _id, _title, _weather, _date, _content = parts
+                        _id = int(_id)
+                        self.diary_list.append(dict(
+                            diary_id=_id,
+                            diary_title=_title,
+                            diary_weather=_weather,
+                            diary_date=_date,
+                            diary_content=_content
+                        ))
+        except FileNotFoundError:
+            self.diary_list = []
+
+    def show_diary_list(self):
+        self.diary_listTable.setRowCount(len(self.diary_list))
+        for i, diary in enumerate(self.diary_list):
+            item_title = QTableWidgetItem(diary["diary_title"])
+            item_title.setFlags(item_title.flags() ^ Qt.ItemIsEditable)
+            item_date = QTableWidgetItem(diary["diary_date"])
+            item_date.setFlags(item_date.flags() ^ Qt.ItemIsEditable)
+            item_weather = QTableWidgetItem(diary["diary_weather"])
+            item_weather.setFlags(item_weather.flags() ^ Qt.ItemIsEditable)
+            item_calories = QTableWidgetItem(fcc.calculate_calories(diary["diary_content"]))
+            item_calories.setFlags(item_calories.flags() ^ Qt.ItemIsEditable) #로비에서 칼로리 표시기능(현재 안됨, 구현 요구됨)
+
+
+            self.diary_listTable.setItem(i, 0, item_title)
+            self.diary_listTable.setItem(i, 1, item_date)
+            self.diary_listTable.setItem(i,2,item_calories)
+            self.diary_listTable.setItem(i, 3, item_weather)
+
+            self.diary_listTable.setSelectionBehavior(QTableWidget.SelectRows)
+
+    def show_diary(self, row, col):
+        self.current_diary_id = self.diary_list[row]["diary_id"]
+        self.diary_text.setPlainText(self.diary_list[row]["diary_content"])
+
+    def create_diary(self):
+        dialog = QDialog(self)
+        dialog.setWindowTitle("일기 작성하기")
+        dialog.setGeometry(100, 100, 400, 300)  # 크기 설정
+
+        layout = QVBoxLayout()
+
+        title_label = QLabel("제목:")
+        title_input = QLineEdit()
+        title_input.setPlaceholderText("제목을 입력해주세요")  # 디폴트 메시지 설정
+        layout.addWidget(title_label)
+        layout.addWidget(title_input)
+
+        weather_label = QLabel("날씨:")
+        weather_input = QLineEdit()
+        weather_input.setPlaceholderText("날씨를 입력해주세요")  # 디폴트 메시지 설정
+        layout.addWidget(weather_label)
+        layout.addWidget(weather_input)
+
+        content_label = QLabel("내용:")
+        content_input = QTextEdit()
+        content_input.setPlaceholderText("내용을 입력해주세요")  # 디폴트 메시지 설정
+        layout.addWidget(content_label)
+        layout.addWidget(content_input)
+
+        ok_button = QPushButton("확인")
+        ok_button.clicked.connect(dialog.accept)
+        layout.addWidget(ok_button)
+
+        dialog.setLayout(layout)
+
+        if dialog.exec() == QDialog.Accepted:
+            title = title_input.text()
+            weather = weather_input.text()
+            content = content_input.toPlainText()
+
+            if title and weather and content:
+                if not self.diary_list:
+                    idx = 0
+                else:
+                    idx = max(diary["diary_id"] for diary in self.diary_list) + 1
+                date = datetime.now().strftime('%Y-%m-%d')
+                self.diary_list.append(dict(
+                    diary_id=idx,
+                    diary_title=title,
+                    diary_weather=weather,
+                    diary_date=date,
+                    diary_content=content
+                ))
+                self.save_diary_to_file()
+                self.show_diary_list()
+
+    def modify_diary(self):
+        if self.current_diary_id is not None:
+            content, ok = QInputDialog.getMultiLineText(self, "일기 수정하기", "내용:", self.diary_text.toPlainText())
+            if ok:
+                for diary in self.diary_list:
+                    if diary["diary_id"] == self.current_diary_id:
+                        diary["diary_content"] = content
+                        self.save_diary_to_file()
+                        self.show_diary_list()
+
+    def delete_diary(self):
+        if self.current_diary_id is not None:
+            for diary in self.diary_list:
+                if diary["diary_id"] == self.current_diary_id:
+                    self.diary_list.remove(diary)
+                    self.save_diary_to_file()
+                    self.show_diary_list()
+
+    def load_diary(self):
+        if self.current_diary_id is not None:
+            diary_data = {}
+            for diary in self.diary_list:
+                if diary["diary_id"] == self.current_diary_id:
+                    diary_data = diary
+            if diary_data:
+                dialog = QDialog(self)
+                dialog.setWindowTitle("View Diary")
+
+                layout = QVBoxLayout()
+
+                title_label = QLabel(f"Title: {diary_data['diary_title']}")
+                layout.addWidget(title_label)
+
+                weather_label = QLabel(f"Weather: {diary_data['diary_weather']}")
+                layout.addWidget(weather_label)
+
+                date_label = QLabel(f"Date: {diary_data['diary_date']}")
+                layout.addWidget(date_label)
+                diary_content = diary_data['diary_content']
+                total_calories = fcc.calculate_calories(diary_content)
+
+                calories_label = QLabel(f"총 칼로리: {total_calories}kcal")
+                layout.addWidget(calories_label)
+
+
+                text_edit = QTextEdit(dialog)
+                text_edit.setPlainText(diary_content)
+                layout.addWidget(text_edit)
+
+                dialog.setLayout(layout)
+                dialog.exec()
+
+    def save_diary_to_file(self):
+        with open(self.data_file, 'w') as file:
+            for diary in self.diary_list:
+                file.write(
+                    f'{diary["diary_id"]}|{diary["diary_title"]}|{diary["diary_weather"]}|{diary["diary_date"]}|{diary["diary_content"]}\n')
+
+
 

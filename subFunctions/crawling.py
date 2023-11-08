@@ -64,7 +64,7 @@ def scrape_weather_forPrint_fromNaver():
     print(cast)
     print(curr_temp)
 
-scrape_weather_forPrint_fromNaver()
+#scrape_weather_forPrint_fromNaver()
 
 
 
