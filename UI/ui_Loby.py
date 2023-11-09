@@ -31,11 +31,19 @@ class Ui_MainWindow(object):
         try:
             with open(profile_data_file, 'r') as file:
                 profile_data = json.load(file)
+
+            # Set default values if 'person' or 'name' is not present in profile_data
+            if 'person' not in profile_data:
+                profile_data['person'] = {'name': "사용자"}
+            elif 'name' not in profile_data['person']:
+                profile_data['person']['name'] = "사용자"
+
             return profile_data
         except FileNotFoundError:
-            return None
+            return {'person': {'name': "사용자"}}  # 파일이 없을 경우 기본값 반환
         except json.JSONDecodeError:
-            return None
+            return {'person': {'name': "사용자"}}  # JSON 디코딩 오류일 경우 기본값 반환
+
 
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
@@ -201,8 +209,8 @@ class Ui_MainWindow(object):
 
     # Display user name in the UI
         user_name_text = "사용자의 운동일지"  # 기본값 설정
-        if profile_data and 'name' in profile_data:
-            user_name_text = f"{profile_data['name']}의 운동일지"
+        if profile_data and 'person' in profile_data and 'name' in profile_data['person']:
+            user_name_text = profile_data['person']['name']
 
         self.user_name.setText(QCoreApplication.translate("MainWindow", user_name_text, None))
     # retranslateUi
