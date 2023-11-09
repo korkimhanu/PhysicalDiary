@@ -1,85 +1,190 @@
 import sys
-from PySide6.QtWidgets import (
-    QApplication, QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton,
-    QHBoxLayout, QMessageBox, QFileDialog
-)
+import os
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QVBoxLayout, QPushButton, QFileDialog, QLineEdit, QSpinBox, QRadioButton, QMessageBox
 from PySide6.QtGui import QPixmap
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QLabel, QLineEdit, QPushButton,
-    QSizePolicy, QWidget)
+from PIL import Image
+from PySide6 import QtCore
+import json
+import uuid
 
+class ProfileApp(QMainWindow):
+    def __init__(self):
+        super(ProfileApp, self).__init__()
 
+        self.setWindowTitle("프로필")
+        self.setGeometry(100, 100, 500, 500)
 
-class Ui_Form(object):
-    def setupUi(self, Form):
-        if not Form.objectName():
-            Form.setObjectName(u"Form")
-        Form.resize(1072, 720)
-        # 프로필 사진
-        self.profile_pic_label = QLabel("프로필 사진")
-        self.profile_pic = QLabel()
-        self.profile_pic.setFixedSize(100, 100)
-        self.profile_pic.setPixmap(QPixmap("default_profile.png"))  # 기본 프로필 사진
-        self.profile_pic_button = QPushButton("사진 변경")
-        self.profile_pic_button.clicked.connect(self.change_profile_pic)
+        self.central_widget = QWidget(self)
+        self.setCentralWidget(self.central_widget)
 
-        # 아이디
-        self.id_label = QLabel("아이디")
-        self.id_edit = QLineEdit()
+        self.layout = QVBoxLayout()
 
-        # 비밀번호
-        self.password_label = QLabel("비밀번호")
-        self.password_edit = QLineEdit()
-        self.password_edit.setEchoMode(QLineEdit.Password)
+        # Input fields for name and age
+        self.name_label = QLabel("이름:")
+        self.layout.addWidget(self.name_label)
+        self.name_input = QLineEdit(self)
+        self.layout.addWidget(self.name_input)
 
-        # 저장 버튼
-        self.save_button = QPushButton("저장")
-        self.save_button.clicked.connect(self.save_profile)
+        self.age_label = QLabel("나이:")
+        self.layout.addWidget(self.age_label)
+        self.age_input = QSpinBox(self)
+        self.layout.addWidget(self.age_input)
 
-        # 레이아웃 구성
-        # layout = QVBoxLayout()
-        #
-        # pic_layout = QHBoxLayout()
-        # pic_layout.addWidget(self.profile_pic)
-        # pic_layout.addWidget(self.profile_pic_button)
-        #
-        # layout.addWidget(self.profile_pic_label)
-        # layout.addLayout(pic_layout)
-        # layout.addWidget(self.id_label)
-        # layout.addWidget(self.id_edit)
-        # layout.addWidget(self.password_label)
-        # layout.addWidget(self.password_edit)
-        # layout.addWidget(self.save_button)
-        #
-        # self.setLayout(layout)
+        # 성별 선택을 위한 라디오 버튼 그룹
+        self.gender_label = QLabel("성별:")
+        self.layout.addWidget(self.gender_label)
+        self.gender_radio_group = []
+        self.male_radio = QRadioButton("남자", self)
+        self.female_radio = QRadioButton("여자", self)
+        self.other_radio = QRadioButton("그 외", self)
+        self.gender_radio_group.extend([self.male_radio, self.female_radio, self.other_radio])
+        self.layout.addWidget(self.male_radio)
+        self.layout.addWidget(self.female_radio)
+        self.layout.addWidget(self.other_radio)
 
-    def change_profile_pic(self):
-        # 파일 다이얼로그를 열어 이미지 파일을 선택합니다.
-        filename, _ = QFileDialog.getOpenFileName(self, "프로필 사진 선택", "", "이미지 파일 (*.png *.jpg *.jpeg *.bmp *.gif)")
-        if filename:
-            self.profile_pic.setPixmap(QPixmap(filename))
+        # 프로필 이미지 표시 레이블
+        self.profile_label = QLabel(self)
+        self.layout.addWidget(self.profile_label)
 
-    def save_profile(self):
-        # 입력된 정보를 가져옵니다.
-        user_id = self.id_edit.text()
-        password = self.password_edit.text()
-        # 여기에 정보를 저장하는 로직을 추가합니다. 예를 들어 데이터베이스에 저장할 수 있습니다.
+        self.central_widget.setLayout(self.layout)
 
-        # 확인 메시지를 표시합니다.
-        QMessageBox.information(self, "저장 완료", "프로필이 저장되었습니다.")
+        # 업로드 버튼 추가
+        self.upload_button = QPushButton("프로필 이미지 업로드", self)
+        self.layout.addWidget(self.upload_button)
+        self.upload_button.clicked.connect(self.upload_profile_image)
 
-# 이 부분은 main.py에서 QApplication 인스턴스를 생성한 후에 다음과 같이 연결해야 합니다.
-# app = QApplication(sys.argv)
-# profile_dialog = ProfileDialog()
-# profile_dialog.show()
-# sys.exit(app.exec())
+        # 저장 버튼 추가
+        self.save_button = QPushButton("프로필 저장", self)
+        self.layout.addWidget(self.save_button)
+        self.save_button.clicked.connect(self.save_profile_data)
 
+        # Create a Person object to store the data
+        self.person = Person()
 
+        # Load profile data when the application starts
+        self.load_profile_data()
 
-#layout구조에 대해서 공부하고 화면 아무것도 안보이는 문제 해결할 필요있음
+    def save_profile_data(self):
+        # 사용자가 입력한 정보를 Person 객체에 저장
+        name = self.name_input.text()
+        age = self.age_input.value()
+
+        # 선택된 성별을 가져오기
+        selected_gender = ""
+        for radio in self.gender_radio_group:
+            if radio.isChecked():
+                selected_gender = radio.text()
+                break
+
+        self.person.set_info(name, selected_gender, age)
+
+        # 고유한 이미지 파일 이름 생성 (UUID를 사용하거나 현재 시간을 기반으로 생성)
+        unique_filename = str(uuid.uuid4()) + ".png"
+        image_path = os.path.join("../PhysicalDiary/DB/profile_image", unique_filename)
+
+        # 이미지 파일 저장
+        pixmap = self.profile_label.pixmap()
+        if pixmap is not None:
+            pixmap.toImage().save(image_path)
+
+        # Person 객체의 정보와 고유한 이미지 파일 이름을 JSON 파일에 저장
+        profile_data = {
+            "person": self.person.to_dict(),
+            "image_path": image_path  # 고유한 이미지 파일 이름 저장
+        }
+        with open("../PhysicalDiary/DB/profile_data.json", "w") as file:
+            json.dump(profile_data, file)
+
+        # 저장이 완료되었다는 메시지 박스 표시
+        QMessageBox.information(self, "저장 완료", "프로필 정보가 성공적으로 저장되었습니다.")
+
+    def load_profile_data(self):
+        try:
+            with open("../PhysicalDiary/DB/profile_data.json", "r") as file:
+                data = json.load(file)
+                person_data = data.get("person", {})
+                image_path = data.get("image_path", "")
+                self.person.from_dict(person_data)
+
+                # 이미지 파일을 QLabel에 표시
+                if image_path and os.path.exists(image_path):
+                    pixmap = QPixmap(image_path)
+                    self.profile_label.setPixmap(pixmap)
+                    self.profile_label.setAlignment(QtCore.Qt.AlignCenter)
+
+                self.update_ui()
+        except FileNotFoundError:
+            # 파일이 없는 경우 처리
+            pass
+
+    def update_ui(self):
+        self.name_input.setText(self.person.name)
+        self.age_input.setValue(self.person.age)
+
+        # 성별 라디오 버튼 설정
+        for radio in self.gender_radio_group:
+            if radio.text() == self.person.gender:
+                radio.setChecked(True)
+
+    def upload_profile_image(self):
+        options = QFileDialog.Options()
+        file_dialog = QFileDialog()
+        file_path, _ = file_dialog.getOpenFileName(self, "프로필 이미지 업로드", "", "Images (*.png *.jpg *.jpeg *.gif *.bmp)", options=options)
+
+        if file_path:
+            # 이미지를 DB/profile_image 디렉토리에 복사
+            destination_dir = "../PhysicalDiary/DB/profile_image"
+            if not os.path.exists(destination_dir):
+                os.makedirs(destination_dir)
+
+            # 고유한 이미지 파일 이름 생성 (UUID를 사용하거나 현재 시간을 기반으로 생성)
+            unique_filename = str(uuid.uuid4()) + ".png"
+            destination_path = os.path.join(destination_dir, unique_filename)
+
+            # 이미지 파일 복사
+            if os.path.exists(destination_path):
+                os.remove(destination_path)  # 기존 이미지 삭제
+
+            os.rename(file_path, destination_path)  # 새 이미지로 저장
+
+            # 이미지 크기를 조절
+            max_width = 300  # 원하는 최대 폭
+            max_height = 300  # 원하는 최대 높이
+            image = Image.open(destination_path)
+            image.thumbnail((max_width, max_height))
+
+            image.save(destination_path)
+
+            # 이미지를 QLabel에 표시 (가운데 정렬)
+            pixmap = QPixmap(destination_path)
+            self.profile_label.setPixmap(pixmap)
+            self.profile_label.setAlignment(QtCore.Qt.AlignCenter)
+
+class Person:
+    def __init__(self):
+        self.name = ""
+        self.gender = ""
+        self.age = 0
+
+    def set_info(self, name, gender, age):
+        self.name = name
+        self.gender = gender
+        self.age = age
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "gender": self.gender,
+            "age": self.age
+        }
+
+    def from_dict(self, data):
+        self.name = data.get("name", "")
+        self.gender = data.get("gender", "")
+        self.age = data.get("age", 0)
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = ProfileApp()
+    window.show()
+    sys.exit(app.exec())
