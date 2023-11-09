@@ -226,7 +226,7 @@ class Ui_MainWindow(object):
                         self.diary_list.append(dict(
                             diary_id=_id,
                             diary_title=_title,
-                            diary_weather=_weather.encode('utf-8'),
+                            diary_weather=_weather,#.encode('utf-8'),
                             diary_date=_date,
                             diary_content=_content
                         ))
@@ -241,7 +241,7 @@ class Ui_MainWindow(object):
             item_date = QTableWidgetItem(diary["diary_date"])
             item_date.setFlags(item_date.flags() ^ Qt.ItemIsEditable)
             weather = diary["diary_weather"]
-            item_weather = QTableWidgetItem(weather.decode('utf-8'))
+            item_weather = QTableWidgetItem(weather)#.decode('utf-8'))
             item_weather.setFlags(item_weather.flags() ^ Qt.ItemIsEditable)
             # item_calories = QTableWidgetItem(fcc.calculate_calories(diary["diary_content"]))
             # item_calories.setFlags(item_calories.flags() ^ Qt.ItemIsEditable) #로비에서 칼로리 표시기능(현재 안됨, 구현 요구됨)
@@ -300,7 +300,7 @@ class Ui_MainWindow(object):
                 self.diary_list.append(dict(
                     diary_id=idx,
                     diary_title=title,
-                    diary_weather=weather.encode('utf-8'),
+                    diary_weather=weather,#.encode('utf-8'),
                     diary_date=date,
                     diary_content=content
                 ))
@@ -341,7 +341,7 @@ class Ui_MainWindow(object):
                 layout.addWidget(title_label)
 
                 weather = diary_data['diary_weather']
-                weather_label = QLabel(f"Weather: {weather.decode('utf-8')}")
+                weather_label = QLabel(f"Weather: {weather}")#.decode('utf-8')}")
                 layout.addWidget(weather_label)
 
                 date_label = QLabel(f"Date: {diary_data['diary_date']}")
