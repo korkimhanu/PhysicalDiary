@@ -22,8 +22,29 @@ from PySide6.QtWidgets import (QApplication, QCalendarWidget, QHeaderView, QLabe
 import os
 from datetime import datetime
 from subFunctions import food_calorie_calculator as fcc, crawling
+import json  # 추가된 부분
 
 class Ui_MainWindow(object):
+    def load_profile_data(self):
+        profile_data_file = os.path.join(os.path.dirname(__file__), '..', 'DB', 'profile_data.json')
+
+        try:
+            with open(profile_data_file, 'r') as file:
+                profile_data = json.load(file)
+
+            # Set default values if 'person' or 'name' is not present in profile_data
+            if 'person' not in profile_data:
+                profile_data['person'] = {'name': "사용자"}
+            elif 'name' not in profile_data['person']:
+                profile_data['person']['name'] = "사용자"
+
+            return profile_data
+        except FileNotFoundError:
+            return {'person': {'name': "사용자"}}  # 파일이 없을 경우 기본값 반환
+        except json.JSONDecodeError:
+            return {'person': {'name': "사용자"}}  # JSON 디코딩 오류일 경우 기본값 반환
+
+
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
@@ -59,6 +80,8 @@ class Ui_MainWindow(object):
         self.diary_listTable.cellClicked.connect(self.show_diary)
         self.diary_listTable.setGeometry(QRect(390, 0, 500, 681))
 
+
+
         # button_layout = QVBoxLayout()
         # self.create_button = QPushButton("일기 작성하기")
         # self.create_button.clicked.connect(self.create_diary)
@@ -75,6 +98,8 @@ class Ui_MainWindow(object):
         # self.load_diary_button = QPushButton("일기 불러오기")
         # self.load_diary_button.clicked.connect(self.load_diary)
         # button_layout.addWidget(self.load_diary_button)
+
+
 
         self.verticalLayoutWidget = QWidget(self.centralwidget)
         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
@@ -125,6 +150,18 @@ class Ui_MainWindow(object):
         self.profileEditBtn.setGeometry(QRect(90, 390, 191, 41))
         self.profileEditBtn.setCursor(QCursor(Qt.PointingHandCursor))
 
+        self.profilePortrait = QLabel(self.centralwidget)
+        self.profilePortrait.setObjectName(u"profilePortrait")
+        self.profilePortrait.setGeometry(QRect(140, 190, 101, 101))
+
+        # Load profile image
+        profile_data = self.load_profile_data()
+        if profile_data and 'image_path' in profile_data:
+            image_path = profile_data['image_path']
+            self.load_profile_image(image_path)
+
+        MainWindow.setCentralWidget(self.centralwidget)
+
         self.calendarWidget = QCalendarWidget(self.centralwidget)
         self.calendarWidget.setObjectName(u"calendarWidget")
         self.calendarWidget.setGeometry(QRect(0, 450, 391, 221))
@@ -166,6 +203,16 @@ class Ui_MainWindow(object):
         self.user_name.setText(QCoreApplication.translate("MainWindow", u"\uc758 \uc6b4\ub3d9\uc77c\uc9c0", None))
         self.profileEditBtn.setText(QCoreApplication.translate("MainWindow", u"\ud504\ub85c\ud544 \uc218\uc815\ud558\uae30", None))
         self.profilePortrait.setText("")
+
+    # Load profile data
+        profile_data = self.load_profile_data()
+
+    # Display user name in the UI
+        user_name_text = "사용자의 운동일지"  # 기본값 설정
+        if profile_data and 'person' in profile_data and 'name' in profile_data['person']:
+            user_name_text = profile_data['person']['name']
+
+        self.user_name.setText(QCoreApplication.translate("MainWindow", user_name_text, None))
     # retranslateUi
 
     def load_diary_from_file(self):
@@ -319,5 +366,25 @@ class Ui_MainWindow(object):
                 file.write(
                     f'{diary[u"diary_id"]}|{diary[u"diary_title"]}|{diary[u"diary_weather"]}|{diary[u"diary_date"]}|{diary[u"diary_content"]}\n')
 
+    def load_profile_data(self):
+        profile_data_file = os.path.join(os.path.dirname(__file__), '..', 'DB', 'profile_data.json')
 
+        try:
+            with open(profile_data_file, 'r') as file:
+                profile_data = json.load(file)
 
+            # Set default values if 'name' is not present in profile_data
+            if 'name' not in profile_data:
+                profile_data['name'] = "사용자"
+
+            return profile_data
+        except FileNotFoundError:
+            return {'name': "사용자"}  # 파일이 없을 경우 기본값 반환
+        except json.JSONDecodeError:
+            return {'name': "사용자"}  # JSON 디코딩 오류일 경우 기본값 반환
+    def load_profile_image(self, image_path):
+        try:
+            pixmap = QPixmap(image_path)
+            self.profilePortrait.setPixmap(pixmap.scaled(101, 101, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        except QPixmap:
+            pass
