@@ -25,6 +25,18 @@ from subFunctions import food_calorie_calculator as fcc, crawling
 import json  # 추가된 부분
 
 class Ui_MainWindow(object):
+    def load_profile_data(self):
+        profile_data_file = os.path.join(os.path.dirname(__file__), '..', 'DB', 'profile_data.json')
+
+        try:
+            with open(profile_data_file, 'r') as file:
+                profile_data = json.load(file)
+            return profile_data
+        except FileNotFoundError:
+            return None
+        except json.JSONDecodeError:
+            return None
+
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
@@ -183,6 +195,12 @@ class Ui_MainWindow(object):
         self.user_name.setText(QCoreApplication.translate("MainWindow", u"\uc758 \uc6b4\ub3d9\uc77c\uc9c0", None))
         self.profileEditBtn.setText(QCoreApplication.translate("MainWindow", u"\ud504\ub85c\ud544 \uc218\uc815\ud558\uae30", None))
         self.profilePortrait.setText("")
+        profile_data = self.load_profile_data()
+
+        # Display user name in the UI
+        if profile_data and 'name' in profile_data:
+            user_name_text = f"{profile_data['name']}의 운동일지"
+            self.user_name.setText(QCoreApplication.translate("MainWindow", user_name_text, None))
     # retranslateUi
 
     def load_diary_from_file(self):
