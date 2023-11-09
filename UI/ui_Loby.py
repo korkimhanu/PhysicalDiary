@@ -208,11 +208,12 @@ class Ui_MainWindow(object):
         profile_data = self.load_profile_data()
 
     # Display user name in the UI
-        user_name_text = "사용자의 운동일지"  # 기본값 설정
+        user_name_text = "사용자"  # 기본값 설정
         if profile_data and 'person' in profile_data and 'name' in profile_data['person']:
             user_name_text = profile_data['person']['name']
 
-        self.user_name.setText(QCoreApplication.translate("MainWindow", user_name_text, None))
+        full_user_name_text = f"{user_name_text}의 운동일지"
+        self.user_name.setText(QCoreApplication.translate("MainWindow", full_user_name_text, None))
     # retranslateUi
 
     def load_diary_from_file(self):
