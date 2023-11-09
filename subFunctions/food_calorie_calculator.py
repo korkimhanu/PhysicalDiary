@@ -5,8 +5,8 @@
  * Description: 칼로리 계산 기능 연동
  * Version: 1.0
 """
-from DB.food_db import FoodDB
-from DB.sports_db import SportsDB
+from PhysicalDiary.DB.food_db import FoodDB
+from PhysicalDiary.DB.sports_db import SportsDB
 
 def calculate_calories(diary_content):
     total_calories = 0

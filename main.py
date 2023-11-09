@@ -1,7 +1,5 @@
 import sys
-from PySide6.QtWidgets import QApplication, QWidget, QMainWindow
-from PySide6.QtCore import QCoreApplication, QDate, QDateTime, QLocale, QMetaObject, QObject, QPoint, QRect, QSize, QTime, QUrl, Qt
-# 로비 UI를 UI 디렉토리에서 import
+from PySide6.QtWidgets import QApplication, QMainWindow
 from UI import ui_Loby as Loby, ui_Diary as Diary, ui_Login as Login
 from UI.ui_ProfileEditor import ProfileApp
 
